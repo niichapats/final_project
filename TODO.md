@@ -31,10 +31,10 @@
 **A member student**
 - view and modify project details  
   ( Method )
-- [ ] Check pending member
-- [ ] Check pending advisor
-- [ ] Check project status (proposal , send project )
-- [ ] Check project details (project id, title, member, status(proposal stage/send project stage)
+- [x] Check pending member
+- [x] Check pending advisor
+- [x] Check project status (proposal , send project )
+- [x] Check project details (project id, title, member, status(proposal stage/send project stage)
 - [ ] Modify project information
 
 

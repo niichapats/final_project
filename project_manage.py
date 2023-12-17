@@ -54,24 +54,8 @@ def login():
     return [this_data[0]['ID'], this_data[0]['role']]
 
 
-# class ProjectData:
-#     def __init__(self, table):
-#         self.project_table = table.table
-#         self.lead = lead
-#         self.title = title
-#         self.member1 = None
-#         self.member2 = None
-#         self.advisor = None
-#         self.status = 'Processing'
-#         self.evaluator1 = None
-#         self.evaluator2 = None
-#         self.num_member = 0
-#         self.num_advisor = 0
-#         self.num_approve = 0
-
-
-
 ########################################################################################
+
 
 class Student:
     global database
@@ -87,6 +71,21 @@ class Student:
         print('1. Check request(s)')
         print('2. Create project')
         print('0. Logout')
+
+    @staticmethod
+    def get_name(role, the_id):
+        project = database.search('project_table').filter(lambda x: x[role] == the_id)
+        project_tb = project.table
+        role_id = project_tb[0][role]
+        if role_id == '':
+            return '-'
+        else:
+            person = database.search('person_table').filter(lambda x: x['ID'] == role_id)
+            joined_data = project.join(person, role, 'ID')
+            joined_table = joined_data.table
+            role_name = joined_table[0]['fist']
+            role_last = joined_table[0]['last']
+            return f'{role_name} {role_last}'
 
     def create_project(self, title):
         #Check if you already have a project or not
@@ -123,10 +122,12 @@ class Student:
                 if row['to_be_member'] == self.std_id:
                     project_id = row['ProjectID']
                     project = database.search('project_table').filter(lambda x: x['ProjectID'] == project_id).table
+                    lead_id = project[0]["Lead"]
+                    lead_name = self.get_name('Lead', lead_id)
                     print(f'You have {self.request} request(s)')
                     print(f'Project id : {row["ProjectID"]}')
                     print(f'Title : {project[0]["Title"]}')
-                    print(f'Leader : {project[0]["Lead"]}')
+                    print(f'Leader : {lead_name}')
                     print()
             print('1. Accept request')
             print('2. Deny request')
@@ -232,17 +233,6 @@ class Lead:
         project_id = project_tb[0]['ProjectID']
         return project_id
 
-    # def get_advisor_name(self):
-    #     project = database.search('project_table').filter(lambda x: x['Lead'] == self.std_id)
-    #     project_tb = project.table
-    #     advisor_id = project_tb[0]['Advisor']
-    #     person = database.search('person_table').filter(lambda x: x['ID'] == advisor_id)
-    #     joined_data = project.join(person, 'Advisor', 'ID')
-    #     joined_table = joined_data.table
-    #     advisor_name = joined_table[0]['fist']
-    #     advisor_last = joined_table[0]['last']
-    #     return f'{advisor_name} {advisor_last}'
-
     def get_name(self, role):
         project = database.search('project_table').filter(lambda x: x['Lead'] == self.std_id)
         project_tb = project.table
@@ -257,19 +247,14 @@ class Lead:
             role_last = joined_table[0]['last']
             return f'{role_name} {role_last}'
 
-    # def get_advisor_id(self):
-    #     project = database.search('project_table').filter(lambda x: x['Lead'] == self.std_id)
-    #     project_tb = project.table
-    #     advisor_id = project_tb[0]['Advisor']
-    #     return advisor_id
-
     def get_role_id(self, role):
         project = database.search('project_table').filter(lambda x: x['Lead'] == self.std_id)
         project_tb = project.table
         role_id = project_tb[0][role]
         return role_id
 
-    def menu(self):
+    @staticmethod
+    def menu():
         print()
         print('Lead menu')
         print('1. Send request member')
@@ -285,10 +270,9 @@ class Lead:
     def send_request(self):
         project = database.search('project_table').filter(lambda x: x['Lead'] == self.std_id).table
         num_member = 0
-        print(project)
         for row in project:
-            print(row['Member1'])
-            print(row['Member2'])
+            # print(row['Member1'])
+            # print(row['Member2'])
             if row['Member1'] != '':
                 num_member += 1
             if row['Member2'] != '':
@@ -300,7 +284,7 @@ class Lead:
             print(f'You have {num_member} member(s). You can request {2 - num_member} more.')
             mem_id = input('Enter member ID : ')
             check_type = database.search('person_table').filter(lambda x: x['ID'] == mem_id).table
-            print(check_type)
+            # print(check_type)
             if check_type[0]['type'] == 'student':
                 project_id = project[0]['ProjectID']
                 member_row = member_pending_request_table_model.copy()
@@ -309,7 +293,7 @@ class Lead:
                 member_row['Response'] = ''
                 member_row['Response_date'] = ''
                 database.search('member_pending_request').insert(member_row)
-                print(database.search('member_pending_request'))
+                # print(database.search('member_pending_request'))
                 print('Sent request successfully.')
             else:
                 print('Cannot request him/her.')
@@ -470,7 +454,6 @@ class Lead:
         print(f"Status : {project_table[0]['Status']}")
         input('[ Press "enter" to go back to the menu ]')
 
-
     def run_menu(self):
         while True:
             self.menu()
@@ -497,6 +480,148 @@ class Lead:
                 break
 
 
+########################################################################################
+
+
+class Member:
+    def __init__(self, std_id):
+        self.std_id = std_id
+        self.role = ''
+
+    def check_mem_role(self):
+        mem1 = database.search('project_table').filter(lambda x: x['Member1'] == self.std_id)
+        mem1_tb = mem1.table
+        if not mem1_tb:
+            return 'Member2'
+        else:
+            return 'Member1'
+
+    def set_role(self, role):
+        self.role = role
+
+    def get_project_id(self):
+        project = database.search('project_table').filter(lambda x: x[self.role] == self.std_id)
+        project_tb = project.table
+        project_id = project_tb[0]['ProjectID']
+        return project_id
+
+    def get_name(self, role):
+        project = database.search('project_table').filter(lambda x: x[self.role] == self.std_id)
+        project_tb = project.table
+        role_id = project_tb[0][role]
+        if role_id == '':
+            return '-'
+        else:
+            person = database.search('person_table').filter(lambda x: x['ID'] == role_id)
+            joined_data = project.join(person, role, 'ID')
+            joined_table = joined_data.table
+            role_name = joined_table[0]['fist']
+            role_last = joined_table[0]['last']
+            return f'{role_name} {role_last}'
+
+    @staticmethod
+    def menu():
+        print('Member Menu')
+        print('1. Check pending member status')
+        print('2. Check pending advisor status')
+        print('3. Check project status')
+        print('4. Check project details')
+
+    def pending_member_status(self):
+        project_id = self.get_project_id()
+        member_pending_request = database.search('member_pending_request').filter(lambda x: x['ProjectID'] == project_id)
+        member_tb = member_pending_request.table
+        if not member_tb:
+            print("Your leader haven't sent any request yet.")
+        else:
+            for row in member_tb:
+                std_id = row["to_be_member"]
+                mem_data = database.search('person_table').filter(lambda x: x['ID'] == std_id)
+                mem_data = mem_data.table
+                first = mem_data[0]['fist']
+                last = mem_data[0]['last']
+                if row["Response"] == '':
+                    response = "Haven't responded yet."
+                else:
+                    response = row["Response"]
+                print(f'Name : {first} {last}    Response : {response}')
+        print()
+        input('[ Press "enter" to go back to the menu ]')
+
+    def pending_advisor_status(self):
+        project_id = self.get_project_id()
+        advisor_pending_request = database.search('advisor_pending_request').filter(lambda x: x['ProjectID'] == project_id)
+        advisor_tb = advisor_pending_request.table
+        if not advisor_tb:
+            print("You haven't sent any request yet.")
+        else:
+            for row in advisor_tb:
+                fac_id = row["to_be_advisor"]
+                adv_data = database.search('person_table').filter(lambda x: x['ID'] == fac_id)
+                adv_data = adv_data.table
+                first = adv_data[0]['fist']
+                last = adv_data[0]['last']
+                if row["Response"] == '':
+                    response = "Haven't responded yet."
+                else:
+                    response = row["Response"]
+                print(f'Name : {first} {last}    Response : {response}')
+        print()
+        input('[ Press "enter" to go back to the menu ]')
+
+    def check_status(self):
+        proposal_project = database.search('proposal_project').filter(lambda x: x[self.role] == self.std_id)
+        evaluate_project = database.search('evaluate').filter(lambda x: x[self.role] == self.std_id)
+        proposal_project_tb = proposal_project.table
+        evaluate_project_tb = evaluate_project.table
+        if not proposal_project_tb:
+            proposal_status = "Haven't submit yet."
+        else:
+            proposal_status = proposal_project_tb[0]['Status']
+        if not evaluate_project_tb:
+            project_status = "Haven't submit yet."
+        else:
+            project_status = evaluate_project_tb[0]['Status']
+        print(f'Proposal status : {proposal_status}')
+        print(f'Project status : {project_status}')
+        print()
+        input('[ Press "enter" to go back to the menu ]')
+
+    def check_details(self):
+        project_data = database.search('project_table').filter(lambda x: x[self.role] == self.std_id)
+        project_table = project_data.table
+        lead_name = self.get_name('Lead')
+        mem1_name = self.get_name('Member1')
+        mem2_name = self.get_name('Member2')
+        advisor_name = self.get_name('Advisor')
+        print('( Project details )')
+        print(f"Project ID : {project_table[0]['ProjectID']}")
+        print(f"Title : {project_table[0]['Title']}")
+        print(f"Leader : {lead_name}")
+        print(f"Member1 : {mem1_name}")
+        print(f"Member2 : {mem2_name}")
+        print(f"Advisor : {advisor_name}")
+        print(f"Status : {project_table[0]['Status']}")
+        input('[ Press "enter" to go back to the menu ]')
+
+    def run_menu(self):
+        role = self.check_mem_role()
+        self.role = role
+        while True:
+            self.menu()
+            lead_command = int(input(': '))
+            if lead_command == 1:
+                self.pending_member_status()
+            elif lead_command == 2:
+                self.pending_advisor_status()
+            elif lead_command == 3:
+                self.check_status()
+            elif lead_command == 4:
+                self.check_details()
+            elif lead_command == 0:
+                print('logout successfully')
+                print()
+                break
 
 # define a function called exit
 
@@ -544,8 +669,8 @@ while True:
             student = Student(val[0])
             student.run_menu()
         elif val[1] == 'member':
-            print('member')
-            pass
+            member = Member(val[0])
+            member.run_menu()
         elif val[1] == 'lead':
             lead = Lead(val[0])
             lead.run_menu()

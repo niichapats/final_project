@@ -23,12 +23,9 @@
 - [x] Check pending member
 - [x] Send request advisor
 - [x] Check request advisor
-- [ ] Send proposal
-- [ ] Send project
-- [ ] Check project status (proposal , send project )
-- [ ]  Check project details (project id, title, member, status(proposal stage/send project stage)
-- [ ] Delete project
-
+- [x] Send proposal
+- [x] Check project status
+- [x]  Check project details
 
 
 **A member student**
@@ -64,7 +61,6 @@
 - Approve the project  
   ( Method )
 - [ ] Approve proposal
-- [ ] Approve project (approve and send to evaluator)
 - [ ] See my project details (show the details about the project I am advising on)
 - [ ] See all project details
 

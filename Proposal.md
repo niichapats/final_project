@@ -1,12 +1,7 @@
-**Evaluation**
-
-**submission step**
-- lead student sent evaluation request to faculty
-- check about member : 1 lead student, 2 members
-- faculty choose to accept/deny evaluation request from lead student
-
-**if accept**
-- see all the details about the project
-- check and evaluate project
-- approve project
-- sent back the result to lead student
+**Evaluation step**
+- lead student sent project to the advisor
+- the advisor approves the project
+- send back the result to the lead student
+- lead student send evaluation request to faculty randomly
+- the faculty evaluate the project(approve/deny)
+- send back the result to the lead student

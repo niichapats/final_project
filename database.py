@@ -1,6 +1,7 @@
 # try wrapping the code below that reads a persons.csv file in a class and make it more general such that it can read in any csv file
 
 import csv, os
+import copy
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -26,14 +27,6 @@ class CSV:
             writer.writeheader()
             writer.writerows(data)
         return True
-
-# def read_csv(file_name):
-#     new_file = []
-#     with open(os.path.join(__location__, file_name)) as f:
-#         rows = csv.DictReader(f)
-#         for r in rows:
-#             new_file.append(dict(r))
-#         return new_file
 
 
 # add in code for a Database class
@@ -75,6 +68,17 @@ class Table:
                 temps.append(item1[aggregation_key])
         return function(temps)
 
+    def join(self, other_table, key1, key2):
+        joined_table = Table(self.table_name + '_joins_' + other_table.table_name, [])
+        for item1 in self.table:
+            for item2 in other_table.table:
+                if item1[key1] == item2[key2]:
+                    dict1 = copy.deepcopy(item1)
+                    dict2 = copy.deepcopy(item2)
+                    dict1.update(dict2)
+                    joined_table.table.append(dict1)
+        return joined_table
+
     # def select(self, attributes_list):
     #     temps = []
     #     for item1 in self.table:
@@ -84,6 +88,7 @@ class Table:
     #                 dict_temp[key] = item1[key]
     #         temps.append(dict_temp)
     #     return temps
+
 
     def select(self, attributes_list):
         temps = []

@@ -59,15 +59,6 @@ class Table:
                 filtered_table.table.append(item1)
         return filtered_table
 
-    def aggregate(self, function, aggregation_key):
-        temps = []
-        for item1 in self.table:
-            if self.__is_float(item1[aggregation_key]):
-                temps.append(float(item1[aggregation_key]))
-            else:
-                temps.append(item1[aggregation_key])
-        return function(temps)
-
     def join(self, other_table, key1, key2):
         joined_table = Table(self.table_name + '_joins_' + other_table.table_name, [])
         for item1 in self.table:
@@ -78,17 +69,6 @@ class Table:
                     dict1.update(dict2)
                     joined_table.table.append(dict1)
         return joined_table
-
-    # def select(self, attributes_list):
-    #     temps = []
-    #     for item1 in self.table:
-    #         dict_temp = {}
-    #         for key in item1:
-    #             if key in attributes_list:
-    #                 dict_temp[key] = item1[key]
-    #         temps.append(dict_temp)
-    #     return temps
-
 
     def select(self, attributes_list):
         temps = []

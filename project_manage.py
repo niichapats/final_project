@@ -11,18 +11,19 @@ from model import advisor_pending_request_table_model
 from model import member_pending_request_table_model
 from model import proposal_project_table_model
 from model import evaluate_project_table_model
+
 database = DB()
 
 
 def initializing():
     read_csv = CSV()
-    person_file = read_csv.read('export/persons.csv')
-    login_file = read_csv.read('export/login.csv')
-    project_file = read_csv.read('export/project.csv')
-    member_file = read_csv.read('export/member_pending_request.csv')
-    advisor_file = read_csv.read('export/advisor_pending_request.csv')
-    proposal_project_file = read_csv.read('export/proposal_project.csv')
-    evaluate_file = read_csv.read('export/evaluate.csv')
+    person_file = read_csv.read('data/persons.csv')
+    login_file = read_csv.read('data/login.csv')
+    project_file = read_csv.read('data/project.csv')
+    member_file = read_csv.read('data/member_pending_request.csv')
+    advisor_file = read_csv.read('data/advisor_pending_request.csv')
+    proposal_project_file = read_csv.read('data/proposal_project.csv')
+    evaluate_file = read_csv.read('data/evaluate.csv')
 
     person_table = Table('person_table', person_file)
     login_table = Table('login_table', login_file)
@@ -87,7 +88,7 @@ class Student:
             return f'{role_name} {role_last}'
 
     def create_project(self, title):
-        #Check if you already have a project or not
+        # Check if you already have a project or not
         check_project = database.search('project_table').filter(lambda x: x['Lead'] == self.std_id)
         check_project_tb = check_project.table
         if not check_project_tb:
@@ -113,7 +114,7 @@ class Student:
                 self.request += 1
 
     def check_request(self):
-        #check if there is a request to be a member sent to you or not, then choose to accept or deny
+        # check if there is a request to be a member sent to you or not, then choose to accept or deny
         request = database.search('member_pending_request').filter(lambda x: x['to_be_member'] == self.std_id).table
         if self.request == 0:
             print('There is no request(s)')
@@ -151,7 +152,8 @@ class Student:
         database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response', 'Accept')
         today = date.today()
         today_format = today.strftime('%d/%m/%Y')
-        database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date', today_format)
+        database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date',
+                                                         today_format)
         self.request = 0
         database.search('login_table').update(lambda x: x['ID'] == self.std_id, 'role', 'member')
         database.search('person_table').update(lambda x: x['ID'] == self.std_id, 'type', 'member')
@@ -165,7 +167,8 @@ class Student:
         database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response', 'Deny')
         today = date.today()
         today_format = today.strftime('%d/%m/%Y')
-        database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date', today_format)
+        database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date',
+                                                         today_format)
         self.request -= 1
 
     def deny_all_request(self):
@@ -175,7 +178,8 @@ class Student:
             database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response', 'Deny')
             today = date.today()
             today_format = today.strftime('%d/%m/%Y')
-            database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date', today_format)
+            database.search('member_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date',
+                                                             today_format)
         self.request = 0
 
     def role_to_lead(self):
@@ -189,10 +193,10 @@ class Student:
         while True:
             self.menu()
             std_command = int(input(': '))
-            if std_command == 1:  #check request then choose to accept or deny
+            if std_command == 1:  # check request then choose to accept or deny
                 self.check_request()
 
-            elif std_command == 2:  #create project
+            elif std_command == 2:  # create project
                 while True:
                     if self.request != 0:
                         print('You must deny all member requests before creating the project.')
@@ -216,12 +220,11 @@ class Student:
                 print('logout successfully')
                 print()
                 break
+            else:
+                print('Invalid command')
 
     def set_request(self, request):
         self.request = request
-
-
-########################################################################################
 
 
 class Lead:
@@ -271,10 +274,10 @@ class Lead:
         print('0. Logout')
 
     def send_request(self):
-        #send request to other students to be a member
+        # send request to other students to be a member
         project = database.search('project_table').filter(lambda x: x['Lead'] == self.std_id).table
         num_member = 0
-        #count the number of members
+        # count the number of members
         for row in project:
             if row['Member1'] != '':
                 num_member += 1
@@ -286,8 +289,11 @@ class Lead:
         else:
             print(f'You have {num_member} member(s). You can request {2 - num_member} more.')
             mem_id = input('Enter member ID : ')
-            check_type = database.search('person_table').filter(lambda x: x['ID'] == mem_id).table
-            if check_type[0]['type'] == 'student':   #Check that the role is student. You can send a request to student only
+            check_type_data = database.search('person_table').filter(lambda x: x['ID'] == mem_id)
+            check_type = check_type_data.table
+            if not check_type:
+                print('Not Found this ID')
+            elif check_type[0]['type'] == 'student':  # Check that the role is student. You can send a request to student only
                 project_id = project[0]['ProjectID']
                 member_row = member_pending_request_table_model.copy()
                 member_row['ProjectID'] = project_id
@@ -302,7 +308,8 @@ class Lead:
 
     def pending_member_status(self):
         project_id = self.get_project_id()
-        member_pending_request = database.search('member_pending_request').filter(lambda x: x['ProjectID'] == project_id)
+        member_pending_request = database.search('member_pending_request').filter(
+            lambda x: x['ProjectID'] == project_id)
         member_tb = member_pending_request.table
         if not member_tb:
             print("You haven't sent any request yet.")
@@ -335,7 +342,7 @@ class Lead:
             check_role = adv_tb[0]['type']
             adv_id = adv_tb[0]['ID']
             project_id = self.get_project_id()
-            if check_role != 'faculty':   #Check that the role is student. You can send a request to student only
+            if check_role != 'faculty':  # Check that the role is student. You can send a request to student only
                 print('Cannot request. He/She is not a faculty.')
             else:
                 new_request = advisor_pending_request_table_model.copy()
@@ -347,7 +354,8 @@ class Lead:
 
     def pending_advisor_status(self):
         project_id = self.get_project_id()
-        advisor_pending_request = database.search('advisor_pending_request').filter(lambda x: x['ProjectID'] == project_id)
+        advisor_pending_request = database.search('advisor_pending_request').filter(
+            lambda x: x['ProjectID'] == project_id)
         advisor_tb = advisor_pending_request.table
         if not advisor_tb:
             print("You haven't sent any request yet.")
@@ -399,13 +407,13 @@ class Lead:
         advisor_id = self.get_role_id('Advisor')
         project = f'{project_title}(file)'
 
-        #for check proposal and check if the project has been submitted or not
+        # for check proposal and check if the project has been submitted or not
         proposal_project = database.search('proposal_project').filter(lambda x: x['Lead'] == self.std_id)
         proposal_project_tb = proposal_project.table
         evaluate = database.search('evaluate').filter(lambda x: x['Lead'] == self.std_id)
         evaluate_tb = evaluate.table
 
-        #random evaluator
+        # random evaluator
         faculty_data = database.search('person_table').filter(lambda x: x['type'] == 'faculty')
         faculty_table = faculty_data.table
         num_fac = len(faculty_table)
@@ -493,9 +501,8 @@ class Lead:
                 print('logout successfully')
                 print()
                 break
-
-
-########################################################################################
+            else:
+                print('Invalid command')
 
 
 class Member:
@@ -506,7 +513,7 @@ class Member:
         self.role = ''
 
     def check_mem_role(self):
-        #check that you are member1 or member2
+        # check that you are member1 or member2
         mem1 = database.search('project_table').filter(lambda x: x['Member1'] == self.std_id)
         mem1_tb = mem1.table
         if not mem1_tb:
@@ -549,7 +556,8 @@ class Member:
 
     def pending_member_status(self):
         project_id = self.get_project_id()
-        member_pending_request = database.search('member_pending_request').filter(lambda x: x['ProjectID'] == project_id)
+        member_pending_request = database.search('member_pending_request').filter(
+            lambda x: x['ProjectID'] == project_id)
         member_tb = member_pending_request.table
         if not member_tb:
             print("Your leader haven't sent any request yet.")
@@ -570,7 +578,8 @@ class Member:
 
     def pending_advisor_status(self):
         project_id = self.get_project_id()
-        advisor_pending_request = database.search('advisor_pending_request').filter(lambda x: x['ProjectID'] == project_id)
+        advisor_pending_request = database.search('advisor_pending_request').filter(
+            lambda x: x['ProjectID'] == project_id)
         advisor_tb = advisor_pending_request.table
         if not advisor_tb:
             print("You haven't sent any request yet.")
@@ -590,8 +599,9 @@ class Member:
         input('[ Press "enter" to go back to the menu ]')
 
     def check_status(self):
-        proposal_project = database.search('proposal_project').filter(lambda x: x[self.role] == self.std_id)
-        evaluate_project = database.search('evaluate').filter(lambda x: x[self.role] == self.std_id)
+        project_id = self.get_project_id()
+        proposal_project = database.search('proposal_project').filter(lambda x: x['ProjectID'] == project_id)
+        evaluate_project = database.search('evaluate').filter(lambda x: x['ProjectID'] == project_id)
         proposal_project_tb = proposal_project.table
         evaluate_project_tb = evaluate_project.table
         if not proposal_project_tb:
@@ -642,9 +652,8 @@ class Member:
                 print('logout successfully')
                 print()
                 break
-
-
-########################################################################################
+            else:
+                print('Invalid command')
 
 
 class Faculty:
@@ -684,7 +693,7 @@ class Faculty:
                 self.request += 1
 
     def check_request(self):
-        #check if there is a request to be an advisor sent to you or not, then choose to accept or deny
+        # check if there is a request to be an advisor sent to you or not, then choose to accept or deny
         request = database.search('advisor_pending_request').filter(lambda x: x['to_be_advisor'] == self.fac_id).table
         if self.request == 0:
             print('There is no request(s)')
@@ -703,16 +712,16 @@ class Faculty:
             print('1. Accept request')
             print('2. Deny request')
             print('3. back to Faculty Menu')
-            acc_de = int(input(': '))
-            if acc_de == 1:
+            eva = int(input(': '))
+            if eva == 1:
                 project_id = input('Enter the project id that you want tp accept : ')
                 self.accept_request_adv(project_id)
                 print('Accepted request successfully.')
-            elif acc_de == 2:
+            elif eva == 2:
                 project_id = input('Enter the project id that you want tp deny : ')
                 self.deny_request(project_id)
                 print('Denied request successfully.')
-            elif acc_de == 3:
+            elif eva == 3:
                 pass
             else:
                 print('Invalid command')
@@ -722,7 +731,8 @@ class Faculty:
         database.search('advisor_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response', 'Accept')
         today = date.today()
         today_format = today.strftime('%d/%m/%Y')
-        database.search('advisor_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date', today_format)
+        database.search('advisor_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date',
+                                                          today_format)
         self.request = 0
         database.search('login_table').update(lambda x: x['ID'] == self.fac_id, 'role', 'advisor')
         database.search('person_table').update(lambda x: x['ID'] == self.fac_id, 'type', 'advisor')
@@ -732,7 +742,8 @@ class Faculty:
         database.search('advisor_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response', 'Deny')
         today = date.today()
         today_format = today.strftime('%d/%m/%Y')
-        database.search('advisor_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date', today_format)
+        database.search('advisor_pending_request').update(lambda x: x['ProjectID'] == project_id, 'Response_date',
+                                                          today_format)
         self.request -= 1
 
     def evaluate(self):
@@ -752,7 +763,7 @@ class Faculty:
                 print('1. Approve project')
                 print('2. Dany Project')
                 print('3. Back to Faculty Menu')
-                fac_command = input(': ')
+                fac_command = int(input(': '))
                 if fac_command == 1:
                     project_id = input('Enter the project id that you want to approve : ')
                     database.search('evaluate').update(lambda x: x['ProjectID'] == project_id, 'Evaluator', self.fac_id)
@@ -763,7 +774,8 @@ class Faculty:
                     project_id = input('Enter the project id that you want to reject : ')
                     database.search('evaluate').update(lambda x: x['ProjectID'] == project_id, 'Evaluator', self.fac_id)
                     database.search('evaluate').update(lambda x: x['ProjectID'] == project_id, 'Status', 'Rejected')
-                    database.search('project_table').update(lambda x: x['ProjectID'] == project_id, 'Status', 'Rejected')
+                    database.search('project_table').update(lambda x: x['ProjectID'] == project_id, 'Status',
+                                                            'Rejected')
                     print('Rejected project successfully.')
                 elif fac_command == 3:
                     pass
@@ -787,6 +799,8 @@ class Faculty:
                 print('logout successfully')
                 print()
                 break
+            else:
+                print('Invalid command')
 
 
 class Advisor:
@@ -836,7 +850,7 @@ class Advisor:
         input('[ Press "enter" to go back to the menu ]')
 
     def check_proposal(self):
-        #check if there is a proposal sent to you or not, then choose to accept or reject
+        # check if there is a proposal sent to you or not, then choose to accept or reject
         proposal = database.search('proposal_project').filter(lambda x: x['Advisor'] == self.adv_id)
         proposal_tb = proposal.table
         if not proposal:
@@ -873,6 +887,8 @@ class Advisor:
                 print('logout successfully')
                 print()
                 break
+            else:
+                print('Invalid command')
 
 
 class Admin:
@@ -886,6 +902,7 @@ class Admin:
         print('1. Show data')
         print('2. Add data')
         print('3. Delete data')
+        print('4. Edit data')
         print('0. logout')
 
     @staticmethod
@@ -944,10 +961,10 @@ class Admin:
                 if fist != '' \
                         and last != '' \
                         and the_type != '':
-                    #add data to person table
+                    # add data to person table
                     new_person = person_table_model.copy()
                     while True:
-                        #generate password
+                        # generate password
                         the_id = f'{randrange(1, 10000000):07}'
                         check_id = database.search('login_table').filter(lambda x: x['ID'] == the_id)
                         if len(check_id.table) == 0:
@@ -957,12 +974,12 @@ class Admin:
                     new_person['last'] = last
                     new_person['type'] = the_type
                     database.search('person_table').insert(new_person)
-                    #add data to login table
+                    # add data to login table
                     new_login = login_table_model.copy()
                     new_login['ID'] = the_id
                     new_login['username'] = f'{fist}.{last[0]}'
                     while True:
-                        #generate password
+                        # generate password
                         password = f'{randrange(1, 10000):04}'
                         check_pass = database.search('login_table').filter(lambda x: x['password'] == password)
                         if len(check_pass.table) == 0:
@@ -980,18 +997,17 @@ class Admin:
             while True:
                 print('Fill in the data')
                 print('! You have to fill in all * question, others are optional !')
-
                 title = input('* Enter the Title of the project : ')
                 the_lead = input('* Enter leader ID : ')
                 mem1 = input('Enter member1 ID : ')
                 mem2 = input('Enter member2 ID : ')
                 adv = input('Enter advisor ID : ')
                 status = input('* Enter status : ')
-                if title != ''\
-                        and the_lead != ''\
+                if title != '' \
+                        and the_lead != '' \
                         and status != '':
                     while True:
-                        #generate password
+                        # generate password
                         project_id = f'{randrange(1, 1000):04}'
                         check_id = database.search('project_table').filter(lambda x: x['ProjectID'] == project_id)
                         if len(check_id.table) == 0:
@@ -1005,10 +1021,10 @@ class Admin:
                     new_project['Advisor'] = adv
                     new_project['Status'] = status
                     database.search('project_table').insert(new_project)
-                    #update role to lead
+                    # update role to lead
                     database.search('person_table').update(lambda x: x['ID'] == the_lead, 'type', 'lead')
                     database.search('login_table').update(lambda x: x['ID'] == the_lead, 'role', 'lead')
-                    if adv != '':   # update role to advisor
+                    if adv != '':  # update role to advisor
                         database.search('person_table').update(lambda x: x['ID'] == adv, 'type', 'advisor')
                         database.search('login_table').update(lambda x: x['ID'] == adv, 'role', 'advisor')
                     print('Add data successfully')
@@ -1026,7 +1042,26 @@ class Admin:
         print('Select data')
         print('1. Person')
         print('2. Project')
-        pass
+        type_data = int(input(': '))
+        if type_data == 1:
+            the_id = input('Enter person ID : ')
+            person_data = database.search('person_table').filter(lambda x: x['ID'] == the_id)
+            person_tb = person_data.table
+            if not person_tb:
+                print('ID not found.')
+            else:
+                database.search('person_table').delete(lambda x: x['ID'] == the_id)
+                database.search('login_table').delete(lambda x: x['ID'] == the_id)
+                print('Delete data successfully')
+        elif type_data == 2:
+            project_id = input('Enter project ID : ')
+            project_data = database.search('project_table').filter(lambda x: x['ProjectID'] == project_id)
+            project_tb = project_data.table
+            if not project_tb:
+                print('ID not found.')
+            else:
+                database.search('project_table').delete(lambda x: x['ProjectID'] == project_id)
+                print('Delete data successfully')
 
     @staticmethod
     def edit_data():
@@ -1034,7 +1069,46 @@ class Admin:
         print('Select data')
         print('1. Person')
         print('2. Project')
-        pass
+        type_data = int(input(': '))
+        if type_data == 1:
+            the_id = input('Enter person ID : ')
+            print('( You cannot edit type/role column.)')
+            column = input('Enter name of the column you want to edit : ')
+            data = input('Enter new data : ')
+            person_data = database.search('person_table').filter(lambda x: x['ID'] == the_id)
+            person_tb = person_data.table
+            column_list = ['ID', 'fist', 'last']
+            if not person_tb:
+                print('ID not found.')
+            elif column not in column_list:
+                print('Invalid column name.')
+            else:
+                database.search('person_table').update(lambda x: x['ID'] == the_id, column, data)
+                if column == 'ID':
+                    database.search('login_table').update(lambda x: x['ID'] == the_id, column, data)
+                if column == 'fist' or 'last':
+                    fist = person_tb[0]['fist']
+                    last = person_tb[0]['last']
+                    new_username = f'{fist}.{last[0]}'
+                    database.search('login_table').update(lambda x: x['ID'] == the_id, 'username', new_username)
+                print('Edit data successfully.')
+                input('[ Press "enter" to go back to the menu ]')
+
+        elif type_data == 2:
+            project_id = input('Enter project ID : ')
+            column = input('Enter name of the column you want to edit : ')
+            data = input('Enter new data : ')
+            project_data = database.search('project_table').filter(lambda x: x['ProjectID'] == project_id)
+            project_tb = project_data.table
+            column_list = ['ProjectID', 'Title', 'Lead', ' Member1', 'Member2', 'Advisor', 'Status']
+            if not project_tb:
+                print('project ID not found.')
+            elif column not in column_list:
+                print('Invalid column name.')
+            else:
+                database.search('project_table').update(lambda x: x['ProjectID'] == project_id, column, data)
+                print('Edit data successfully')
+                input('[ Press "enter" to go back to the menu ]')
 
     def run_menu(self):
         while True:
@@ -1046,10 +1120,14 @@ class Admin:
                 self.add_data()
             elif adm_command == 3:
                 self.delete_data()
+            elif adm_command == 4:
+                self.edit_data()
             elif adm_command == 0:
                 print('logout successfully')
                 print()
                 break
+            else:
+                print('Invalid command')
 
 
 # define a function called exit
@@ -1057,7 +1135,7 @@ class Admin:
 
 def exit():
     writer = CSV()
-    export_path = 'export/'
+    export_path = 'data/'
     writer.write(export_path + 'persons.csv', database.search('person_table').select('*'))
     writer.write(export_path + 'login.csv', database.search('login_table').select('*'))
     writer.write(export_path + 'project.csv', database.search('project_table').select('*'))
@@ -1068,10 +1146,10 @@ def exit():
 
 
 # here are things to do in this function:
-   # write out all the tables that have been modified to the corresponding csv files
-   # By now, you know how to read in a csv file and transform it into a list of dictionaries. For this project, you also need to know how to do the reverse, i.e., writing out to a csv file given a list of dictionaries. See the link below for a tutorial on how to do this:
+# write out all the tables that have been modified to the corresponding csv files
+# By now, you know how to read in a csv file and transform it into a list of dictionaries. For this project, you also need to know how to do the reverse, i.e., writing out to a csv file given a list of dictionaries. See the link below for a tutorial on how to do this:
 
-   # https://www.pythonforbeginners.com/basics/list-of-dictionaries-to-csv-in-python
+# https://www.pythonforbeginners.com/basics/list-of-dictionaries-to-csv-in-python
 
 
 ########################################################################################
@@ -1079,6 +1157,7 @@ def exit():
 
 initializing()
 
+print('-- Welcome to Senior project managing program -- ')
 while True:
     command = input('Enter the command (login / exit) : ')
     if command == 'exit':

@@ -71,4 +71,4 @@
   ( Main Method )
 - [x] show data -> person, project
 - [x] Add data -> person, project
-- [ ] Delete data -> person, project
+- [x] Delete data -> person, project

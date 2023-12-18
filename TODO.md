@@ -68,3 +68,4 @@
 - [x] show data -> person, project
 - [x] Add data -> person, project
 - [x] Delete data -> person, project
+- [x] Edit data -> person, project

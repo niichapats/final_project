@@ -17,7 +17,7 @@
 - Proposal.md - description how the program works
 - TODO.md - a list of things to do
 - model.py - contains all models that were used in this project (all keys)
-- database.py - contains classes and methods that were used in project_mange.py
+- database.py - contains classes and methods that were used in project_mange.py  
 **Class and its method (database.py)**
 
 | Class | Method | Action                                                                    |
@@ -71,7 +71,7 @@
 | Admin   | Delete data in person table / project table                                                             | delete_data            | Admin   | 75%   **              |
 | Admin   | Edit data in  person table / project table                                                              | edit_data              | Admin   | 75%   ***             |
 
-** Can delete only in person table, login table, project table. (not all the related tables)
+** Can delete only in person table, login table, project table. (not all the related tables)  
 *** Can choose only some column to edit, update only person login table and project table (not all the related tables)
 
 

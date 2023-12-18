@@ -35,8 +35,6 @@
 - [x] Check pending advisor
 - [x] Check project status (proposal , send project )
 - [x] Check project details
-- [ ] Modify project information
-
 
 **faculty**
 - See request to be a supervisor
@@ -50,7 +48,6 @@
 -> see if there is any request to be the evaluator
 -> if there is a request
 -> evaluate the project
-- [ ] See all project details
 
 
 **advisor**
@@ -62,7 +59,6 @@
   ( Main Method )
 - [x] Check proposal -> then choose to approve/reject
 - [x] See my project details (show the details about the project I am advising on)
-- [ ] See all project details
 
 
 **admin**

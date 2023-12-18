@@ -64,7 +64,7 @@
 | Member  | Show all the details of the project                                                                     | check_details          | Member  | 100%                  |
 | Faculty | Check if there are any advisor requests sent to this faculty, then choose to accept or deny the request | check_request          | Faculty | 100%                  |
 | Faculty | Check if there are any project evaluation request, then evaluate the project(approve, reject)           | evaluate               | Faculty | 100%                  |
-| Advisor | Show all the details of the project this advisor is advising                                            | check_details          | Advisor | 100%                  |
+| Advisor | Show all the details of the project this advisor is advising on                                         | check_details          | Advisor | 100%                  |
 | Advisor | Check if there are any proposal sent to this advisor, then choose to accept or reject the proposal      | check_proposal         | Advisor | 100%                  |
 | Admin   | Show all data in the table(choose person / project table)                                               | show_data              | Admin   | 100%                  |
 | Admin   | Add data to person table / project table                                                                | add_data               | Admin   | 100%                  |

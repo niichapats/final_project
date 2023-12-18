@@ -2,7 +2,7 @@
 
 ### List of file
 
-##### folder data
+#### folder data
 
 - person.csv - contains all person data
 - login.csv - contains login data
@@ -20,20 +20,21 @@
 - database.py - contains classes and methods that were used in project_mange.py  
 **Class and its method (database.py)**
 
-| Class | Method | Action                                                                    |
-|-------|--------|---------------------------------------------------------------------------|
-| CSV   | init   | Initializes a CSV object with a file path                                 |
-| CSV   | read   | Reads data from the specified CSV file and returns a list of dictionaries |
-| CSV   | write  | Writes data to the specified CSV file                                     |
-| DB    | init   | Initializes a DB object with an empty list to store tables                |
-| DB    | insert | Inserts a table into the database                                         |
-| DB    | search | Searches for a table in the database by name                              |
-| Table | init   | Initializes a Table object with a name and data                           |
-| Table | join   | Creates a new table by joining with another table on specified keys       |
-| Table | select | Selects specific attributes from the table                                |
-| Table | delete | Deletes rows from the table that satisfy the given condition              |
-| Table | insert | Inserts a new entry (dictionary) into the table                           |
-| Table | update | Updates values in the table for rows that satisfy the given condition     |
+| Class | Method | Action                                                                                         |
+|-------|--------|------------------------------------------------------------------------------------------------|
+| CSV   | init   | Initializes a CSV object with a file path                                                      |
+| CSV   | read   | Reads data from the specified CSV file and returns a list of dictionaries                      |
+| CSV   | write  | Writes data to the specified CSV file                                                          |
+| DB    | init   | Initializes a DB object with an empty list to store tables                                     |
+| DB    | insert | Inserts a table into the database                                                              |
+| DB    | search | Searches for a table in the database by name                                                   |
+| Table | init   | Initializes a Table object with a name and data                                                |
+| Table | filter | generates a new table with rows filtered from the current table based on a provided condition  |
+| Table | join   | Creates a new table by joining with another table on specified keys                            |
+| Table | select | Selects specific attributes from the table                                                     |
+| Table | delete | Deletes rows from the table that satisfy the given condition                                   |
+| Table | insert | Inserts a new entry (dictionary) into the table                                                |
+| Table | update | Updates values in the table for rows that satisfy the given condition                          |
 
 
 - project_manage.py - contains 6 classes(all roles) and 3 functions(initializing, login, exit)
@@ -85,7 +86,7 @@
 #### Missing features and outstanding bugs
 
 Bugs : I have fixed all the bugs I found.  
-Features : These are all features I think I should add more
+Missing Features : These are all features I think I should add more
 - Member : modify project information
 - Faculty and Advisor : show all project details
 - Advisor : add comment

@@ -84,7 +84,7 @@
 
 #### Missing features and outstanding bugs
 
-Bugs : I have fixed all the bugs I found.
+Bugs : I have fixed all the bugs I found.  
 Features : These are all features I think I should add more
 - Member : modify project information
 - Faculty and Advisor : show all project details

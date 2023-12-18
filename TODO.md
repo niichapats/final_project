@@ -1,11 +1,11 @@
 
-#### Student
+**lead student**
 - choose to create project or not, if create -> change role to lead student
 - see the request to be a member  
-  ( Method )
+  ( Main Method )
 - [x] Menu
 - [x] Create project
-- [x] Check request 
+- [x] Check request  -> then choose to accept/deny
 - [x] Accept request 
 - [x] Deny request
 - [x] Role to lead
@@ -17,24 +17,24 @@
 - Send invitational messages to other student to be a member
 - Send request to faculty to be an advisor
 - Submit the final project report  
-  ( Method )
+  ( Main Method )
 - [x] Menu
 - [x] Send request member
 - [x] Check pending member
 - [x] Send request advisor
 - [x] Check request advisor
 - [x] Send proposal
-- [x] Check project status
-- [x]  Check project details
+- [x] Check project status (proposal , send project )
+- [x] Check project details
 
 
-**A member student**
+**member student**
 - view and modify project details  
-  ( Method )
+  ( Main Method )
 - [x] Check pending member
 - [x] Check pending advisor
 - [x] Check project status (proposal , send project )
-- [x] Check project details (project id, title, member, status(proposal stage/send project stage)
+- [x] Check project details
 - [ ] Modify project information
 
 
@@ -43,11 +43,11 @@
 - Send response denying to serve as an advisor
 - See details of all the project
 - Evaluate projects  
-  ( Method )
-- [ ] Check request advisor
+  ( Main Method )
+- [x] Check request advisor
 -> accept change role to advisor
-- [ ] Evaluate project
--> see if there any request to be the evaluator
+- [x] Evaluate project
+-> see if there is any request to be the evaluator
 -> if there is a request
 -> evaluate the project
 - [ ] See all project details
@@ -59,17 +59,16 @@
 - See details of all the project
 - Evaluate projects
 - Approve the project  
-  ( Method )
-- [ ] Approve proposal
-- [ ] See my project details (show the details about the project I am advising on)
+  ( Main Method )
+- [x] Check proposal -> then choose to approve/reject
+- [x] See my project details (show the details about the project I am advising on)
 - [ ] See all project details
 
 
 **admin**
 - Implement database management features
 - Update tables with evaluation data  
-  ( Method )
-- [ ] See data -> person, member, lead, advisor, evaluator 
-- [ ] Add data -> person, member, lead, advisor, evaluator 
-- [ ] Delete data -> person, member, lead, advisor, evaluator 
-
+  ( Main Method )
+- [x] show data -> person, project
+- [x] Add data -> person, project
+- [ ] Delete data -> person, project

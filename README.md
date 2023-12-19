@@ -38,14 +38,29 @@
 
 
 - project_manage.py - contains 6 classes(all roles) and 3 functions(initializing, login, exit)
-  1. initializing
-     - Read all .csv and insert to be a table
-  2. login
-     -  function checks user-entered credentials against a 'login_table' in the database. If valid, it returns the user's ID and role; otherwise, it prints an error and returns None.
-  3. exit
-     - stop running the program and save changes of all data in csv file
+  - Function
+    - initializing
+       - Read all .csv and insert to be a table
+    - login
+       -  Function checks user-entered credentials against a 'login_table' in the database. If valid, it returns the user's ID and role; otherwise, it prints an error and returns None.
+    - exit
+       - Stop running the program and save changes of all data in csv file
+  - Class
+    - Student
+        - Manages student-related actions and contains all the relevant methods for creating projects and checking requests.
+    - Lead
+        - Manages lead student-related actions and contains all the relevant methods for sending member requests, checking pending member status, requesting an advisor, checking pending advisor status, sending a proposal, sending the project, checking the project status and checking the project details.
+    - Member
+        - Manages member-related actions and contains all the relevant methods for checking pending member status, checking pending advisor status, checking the project status and checking the project details.
+    - Faculty
+        - Manages faculty-related actions and contains all the relevant methods for checking advisor requests and evaluating the project.
+    - Advisor
+      - Manages advisor-related actions and contains all the relevant methods for checking the project details and checking and approving a proposal. 
+    - Admin
+      - Manages admin-related actions and contains all the relevant methods for showing data, adding data, deleting data and editing data.
 
-**Role and its function (project_manage.py)**
+
+### Role and its function
 
 | Role    | Action                                                                                                  | Method                 | Class   | Completion Percentage |
 |---------|---------------------------------------------------------------------------------------------------------|------------------------|---------|-----------------------|
@@ -76,17 +91,17 @@
 *** Can choose only some column to edit, update only person login table and project table (not all the related tables)
 
 
-#### How to compile and run the project
+### How to compile and run the project
 - Run project_manage.py
 - Login by username and password, then the program will show the menu that your role can do
 - Select any option you want to do
 - When you finish everything, logout(by enter 0) and exit the program
 
 
-#### Missing features and outstanding bugs
+### Missing features and outstanding bugs
 
 Bugs : I have fixed all the bugs I found.  
 Missing Features : These are all features I think I should add more
 - Member : modify project information
-- Faculty and Advisor : show all project details
-- Advisor : add comment
+- Faculty and Advisor : show all projects details
+- Advisor : add comments about the project him/her is advising on

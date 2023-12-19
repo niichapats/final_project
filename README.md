@@ -18,6 +18,7 @@
 - TODO.md - a list of things to do
 - model.py - contains all models that were used in this project (all keys)
 - database.py - contains classes and methods that were used in project_mange.py  
+
 **Class and its method (database.py)**
 
 | Class | Method | Action                                                                                         |
@@ -62,30 +63,30 @@
 
 ### Role and its function
 
-| Role    | Action                                                                                                  | Method                 | Class   | Completion Percentage |
-|---------|---------------------------------------------------------------------------------------------------------|------------------------|---------|-----------------------|
-| Student | Check if there are any member requests sent to this student, then choose to accept or deny the request  | check_request          | Student | 100%                  |
-| Student | Check if this student already has a project. If not, create a new project                               | create_project         | Student | 100%                  |
-| Lead    | Send a member request to other students                                                                 | send_request           | Lead    | 100%                  |
-| Lead    | Show the pending member status (waiting, accept, deny)                                                  | pending_member_status  | Lead    | 100%                  |
-| Lead    | Send a advisor request to faculties                                                                     | request_advisor        | Lead    | 100%                  |
-| Lead    | Show the pending advisor status (waiting, accept, deny)                                                 | pending_advisor_status | Lead    | 100%                  |
-| Lead    | Send a proposal to their own advisor                                                                    | send_proposal          | Lead    | 100%                  |
-| Lead    | Send the project to the evaluator(randomly from the faculty)                                            | send_project           | Lead    | 100%                  |
-| Lead    | Show the project status(proposal status, project evaluation)                                            | check_status           | Lead    | 100%                  |
-| Lead    | Show all the details of the project                                                                     | check_details          | Lead    | 100%                  |
-| Member  | Show the pending member status (waiting, accept, deny)                                                  | pending_member_status  | Member  | 100%                  |
-| Member  | Show the pending advisor status (waiting, accept, deny)                                                 | pending_advisor_status | Member  | 100%                  |
-| Member  | Send the project to the evaluator(randomly from the faculty)                                            | check_status           | Member  | 100%                  |
-| Member  | Show all the details of the project                                                                     | check_details          | Member  | 100%                  |
-| Faculty | Check if there are any advisor requests sent to this faculty, then choose to accept or deny the request | check_request          | Faculty | 100%                  |
-| Faculty | Check if there are any project evaluation request, then evaluate the project(approve, reject)           | evaluate               | Faculty | 100%                  |
-| Advisor | Show all the details of the project this advisor is advising on                                         | check_details          | Advisor | 100%                  |
-| Advisor | Check if there are any proposal sent to this advisor, then choose to accept or reject the proposal      | check_proposal         | Advisor | 100%                  |
-| Admin   | Show all data in the table(choose person / project table)                                               | show_data              | Admin   | 100%                  |
-| Admin   | Add data to person table / project table                                                                | add_data               | Admin   | 100%                  |
-| Admin   | Delete data in person table / project table                                                             | delete_data            | Admin   | 75%   **              |
-| Admin   | Edit data in  person table / project table                                                              | edit_data              | Admin   | 75%   ***             |
+| Role    | Action                                                                                                  | Method                                                    | Class   | Completion Percentage |
+|---------|---------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|---------|-----------------------|
+| Student | Check if there are any member requests sent to this student, then choose to accept or deny the request  | check_request, accept_request, deny_request               | Student | 100%                  |
+| Student | Check if this student already has a project. If not, create a new project                               | create_project                                            | Student | 100%                  |
+| Lead    | Send a member request to other students                                                                 | send_request                                              | Lead    | 100%                  |
+| Lead    | Show the pending member status (waiting, accept, deny)                                                  | pending_member_status, get_project_id                     | Lead    | 100%                  |
+| Lead    | Send a advisor request to faculties                                                                     | request_advisor, get_project_id                           | Lead    | 100%                  |
+| Lead    | Show the pending advisor status (waiting, accept, deny)                                                 | pending_advisor_status, get_project_id                    | Lead    | 100%                  |
+| Lead    | Send a proposal to their own advisor                                                                    | send_proposal, get_project_id, get_role_id                | Lead    | 100%                  |
+| Lead    | Send the project to the evaluator(randomly from the faculty)                                            | send_project, get_project_id, get_role_id                 | Lead    | 100%                  |
+| Lead    | Show the project status(proposal status, project evaluation)                                            | check_status                                              | Lead    | 100%                  |
+| Lead    | Show all the details of the project                                                                     | check_details, get_name                                   | Lead    | 100%                  |
+| Member  | Show the pending member status (waiting, accept, deny)                                                  | pending_member_status, get_project_id                     | Member  | 100%                  |
+| Member  | Show the pending advisor status (waiting, accept, deny)                                                 | pending_advisor_status, get_project_id                    | Member  | 100%                  |
+| Member  | Send the project to the evaluator(randomly from the faculty)                                            | check_status                                              | Member  | 100%                  |
+| Member  | Show all the details of the project                                                                     | check_details, get_nam                                    | Member  | 100%                  |
+| Faculty | Check if there are any advisor requests sent to this faculty, then choose to accept or deny the request | check_request, accept_request_adv, deny_request, get_name | Faculty | 100%                  |
+| Faculty | Check if there are any project evaluation request, then evaluate the project(approve, reject)           | evaluate, get_name                                        | Faculty | 100%                  |
+| Advisor | Show all the details of the project this advisor is advising on                                         | check_details, get_name                                   | Advisor | 100%                  |
+| Advisor | Check if there are any proposal sent to this advisor, then choose to accept or reject the proposal      | check_proposal                                            | Advisor | 100%                  |
+| Admin   | Show all data in the table(choose person / project table)                                               | show_data                                                 | Admin   | 100%                  |
+| Admin   | Add data to person table / project table                                                                | add_data                                                  | Admin   | 100%                  |
+| Admin   | Delete data in person table / project table                                                             | delete_data                                               | Admin   | 75%   **              |
+| Admin   | Edit data in  person table / project table                                                              | edit_data                                                 | Admin   | 75%   ***             |
 
 ** Can delete only in person table, login table, project table. (not all the related tables)  
 *** Can choose only some column to edit, update only person login table and project table (not all the related tables)
